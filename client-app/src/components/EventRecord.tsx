@@ -1,5 +1,5 @@
 import { NoticeBar, Space, Tag } from "antd-mobile";
-function EventRecord(props: { type: string; seqId: string; title: string; content: string }) {
+function EventRecord(props: { time?: string; type: string; seqId: string; title: string; content: string }) {
   return (
     <>
       <NoticeBar
@@ -9,12 +9,15 @@ function EventRecord(props: { type: string; seqId: string; title: string; conten
         content={
           <Space direction="vertical">
             <Space>
+              {/* style={{ "--background-color": "#5790df" }} */}
               <Tag color="primary" fill="outline">
                 {props.title}
               </Tag>
-              <Tag>{props.seqId}</Tag>
+              <Tag color="#666" fill="outline">
+                {props.seqId}
+              </Tag>
             </Space>
-            {props.content}
+            <div style={{ wordBreak: "break-all" }}>{props.content}</div>
           </Space>
         }
       />

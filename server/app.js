@@ -63,6 +63,8 @@ app.post("/jsbridgeProxy", async (req, res, next) => {
     const { module, action, params, callback, callbackId } = data;
 
     const sockets = await io.allSockets();
+    // TODO 指定 socket
+    console.log(sockets.size, socketQueue.length);
     const results = await Promise.all(
       Array.from(sockets)
         .map((socketId) => {
@@ -105,7 +107,7 @@ const createSocketServer = (httpServer) => {
     const address = socket.handshake.address;
     const socketType = socket.handshake.query.type;
 
-    if (socketType && socketType === "mock-client") {
+    if (socketType && socketType === "jsbridge-client") {
       logger.info(`[${socket.id}] mock client 已连接：${address}`);
       socketQueue.push(socket);
       updateSocketQueue(socket, true);
@@ -125,7 +127,7 @@ const createSocketServer = (httpServer) => {
           callbackFnQueue.splice(removeIndex, 1);
         }
       } else {
-        logger.error(`[mock-client-send] seqId: ${seqId} 回调函数不存在`);
+        logger.error(`[jsbridge-client-send] seqId: ${seqId} 回调函数不存在`);
       }
     });
   });

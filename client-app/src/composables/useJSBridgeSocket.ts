@@ -17,7 +17,7 @@ export default function useJSBridgeSocket({ receiveData }: { receiveData: (data:
   useEffect(() => {
     socket.current = io("http://192.168.13.115:3300", {
       query: {
-        type: "mock-client",
+        type: "jsbridge-client",
       },
     });
     socket.current.on("connect", () => {
@@ -35,6 +35,7 @@ export default function useJSBridgeSocket({ receiveData }: { receiveData: (data:
     });
     return () => {
       setSocketStatus(SOCKET_STATUS.NO_CONNECTING);
+      setSocketStatusText("服务连接中断");
       setSocketStatusText("主动关闭服务连接");
       socket.current?.disconnect();
     };

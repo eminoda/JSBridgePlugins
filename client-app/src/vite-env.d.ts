@@ -8,6 +8,7 @@ declare interface Window {
 }
 
 type ServerMessage = {
+  time?: string;
   seqId: string;
   data: { [key: string]: any };
 };
