@@ -1,0 +1,25 @@
+{
+  "name": "jsbridgeplugins",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "jsbridge",
+    "plugins"
+  ],
+  "author": "eminoda",
+  "license": "MIT",
+  "dependencies": {
+    "address": "^2.0.2",
+    "chalk": "^2.4.2",
+    "default-gateway": "^6.0.3",
+    "express": "^4.19.2",
+    "http-proxy-middleware": "^3.0.0",
+    "nonce-str": "^1.0.1",
+    "portfinder": "^1.0.32",
+    "socket.io": "^4.7.5"
+  }
+}
