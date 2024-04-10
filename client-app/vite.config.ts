@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: "src/main.ts",
-        mock: "src/mock.ts",
+        main: "src/main.tsx",
+        mock: "src/mock.tsx",
       },
     },
   },

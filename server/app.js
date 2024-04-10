@@ -130,6 +130,13 @@ const createSocketServer = (httpServer) => {
         logger.error(`[jsbridge-client-send] seqId: ${seqId} 回调函数不存在`);
       }
     });
+    // 查询当前 JSBridge Server 列表
+    socket.on("client-list", () => {
+      socket.emit(
+        "client-list",
+        socketQueue.map((socket) => socket.id)
+      );
+    });
   });
   return io;
 };
