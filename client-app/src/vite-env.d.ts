@@ -12,3 +12,7 @@ type ServerMessage = {
   seqId: string;
   data: { [key: string]: any };
 };
+
+declare module "nonce-str/index" {
+  export default (num: number) => string;
+}

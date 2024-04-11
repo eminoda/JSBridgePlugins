@@ -24,8 +24,12 @@ const logger = {
   info(msg) {
     console.log(chalk.blue(msg));
   },
-  debug(msg) {
-    console.log(chalk.cyan(msg));
+  debug(msg, origin) {
+    if (origin === "mock-client") {
+      console.log(chalk.greenBright(msg));
+    } else {
+      console.log(chalk.cyan(msg));
+    }
   },
   error(msg) {
     console.log(chalk.red(msg));
@@ -85,7 +89,7 @@ app.post("/jsbridgeProxy", async (req, res, next) => {
                 }
               },
             });
-            logger.debug(`[${socket.id}][${seqId}] --> mock client：${JSON.stringify(data)}`);
+            logger.debug(`[${socket.id}_${seqId}][jsbridge-client] --> ${JSON.stringify(data)}`);
             socket.emit("server-send", { seqId, data: { module, action, params, callback, callbackId: callbackId || seqId, type: options.type } });
           });
         })
@@ -107,35 +111,46 @@ const createSocketServer = (httpServer) => {
     const address = socket.handshake.address;
     const socketType = socket.handshake.query.type;
 
-    if (socketType && socketType === "jsbridge-client") {
-      logger.info(`[${socket.id}] mock client 已连接：${address}`);
-      socketQueue.push(socket);
-      updateSocketQueue(socket, true);
-      // logger.info(`[socketQueue] ${socketQueue.map((item) => item.id)}`);
-    }
+    logger.info(`[${socket.id}][${socketType}] 已连接：${address}`);
+    socketQueue.push(socket);
+    updateSocketQueue(socket, true);
+
     socket.on("disconnect", (reason) => {
-      logger.warning(`[${socket.id}] mock client 断开连接：${address}，${reason}`);
+      logger.warning(`[${socket.id}][${socketType}] 断开连接：${address}，${reason}`);
       updateSocketQueue(socket, false);
     });
-    socket.on("client-send", ({ seqId, data }) => {
-      logger.debug(`[${socket.id}][${seqId}] <-- mock client：${JSON.stringify(data)}`);
-      const match = callbackFnQueue.find((item) => item.seqId === seqId);
-      if (match) {
-        match.callbackFn(null, data);
-        if (match.type) {
-          const removeIndex = callbackFnQueue.findIndex((item) => item.seqId === seqId);
-          callbackFnQueue.splice(removeIndex, 1);
-        }
-      } else {
-        logger.error(`[jsbridge-client-send] seqId: ${seqId} 回调函数不存在`);
+    socket.on("jsbridge-send", ({ seqId, data }) => {
+      logger.debug(`[${socket.id}_${seqId}][${socketType}] <-- ${JSON.stringify(data)}`);
+      const mockSocketId = callbackFnQueue.find((item) => item.seqId === seqId)?.socketId;
+      const MockSocket = socketQueue.find((item) => item.id === mockSocketId);
+      if (MockSocket) {
+        MockSocket.emit("mock-send", { seqId, data });
+      }
+      // const match = callbackFnQueue.find((item) => item.seqId === seqId);
+      // if (match) {
+      //   match.callbackFn(null, data);
+      //   if (match.type) {
+      //     const removeIndex = callbackFnQueue.findIndex((item) => item.seqId === seqId);
+      //     callbackFnQueue.splice(removeIndex, 1);
+      //   }
+      // } else {
+      //   logger.error(`[${socket.id}_${seqId}][${socketType}] 回调函数不存在`);
+      // }
+    });
+    socket.on("mock-send", ({ seqId, socketId, data }) => {
+      logger.debug(`[${socket.id}_${seqId} to ${socketId}][${socketType}] --> ${JSON.stringify(data)}`, socketType);
+      const JSBridgeSocket = socketQueue.find((item) => item.id === socketId);
+      if (JSBridgeSocket) {
+        logger.debug(`[${JSBridgeSocket.id}_${seqId}][${JSBridgeSocket.handshake.query.type}] --> ${JSON.stringify(data)}`);
+        callbackFnQueue.push({ seqId, socketId: socket.id });
+        JSBridgeSocket.emit("server-send", { seqId, data });
       }
     });
     // 查询当前 JSBridge Server 列表
-    socket.on("client-list", () => {
-      socket.emit(
-        "client-list",
-        socketQueue.map((socket) => socket.id)
-      );
+    socket.on("socket-list", (type) => {
+      const activeJSBridgeList = socketQueue.filter((item) => item.handshake.query.type === type).map((socket) => socket.id);
+      logger.debug(`[${socket.id}] 当前 JSBridge 列表：${activeJSBridgeList}`);
+      socket.emit("socket-list", activeJSBridgeList);
     });
   });
   return io;

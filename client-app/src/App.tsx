@@ -39,13 +39,15 @@ function App() {
 
   return (
     <>
-      <Space direction="vertical" block>
-        {recordList.map((item, index) => {
-          return <EventRecord key={index} type={item.type} seqId={item.seqId} title={item.title} content={item.content} />;
-        })}
-      </Space>
-      {socketStatus === 1 && recordList.length === 0 && <Result icon={<FaceRecognitionOutline />} status="success" title="服务已连接" description="等待业务端操作" />}
       {socketStatus !== 1 && <ErrorBlock status="disconnected" title={<span>{socketStatusText}</span>} description={<span>{socketStatusTip}</span>}></ErrorBlock>}
+      {socketStatus === 1 && recordList.length === 0 && <Result icon={<FaceRecognitionOutline />} status="success" title="服务已连接" description="等待业务端操作" />}
+      {socketStatus === 1 && recordList.length > 0 && (
+        <Space direction="vertical" block>
+          {recordList.map((item, index) => {
+            return <EventRecord key={index} type={item.type} seqId={item.seqId} title={item.title} content={item.content} />;
+          })}
+        </Space>
+      )}
     </>
   );
 }

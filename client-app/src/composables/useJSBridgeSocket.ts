@@ -46,7 +46,7 @@ export default function useJSBridgeSocket({ receiveData }: { receiveData: (data:
     socketStatusText,
     socketStatusTip,
     sendData: (serverMessage: ServerMessage) => {
-      socket.current?.emit("client-send", serverMessage);
+      socket.current?.emit("jsbridge-send", serverMessage);
     },
   };
 }

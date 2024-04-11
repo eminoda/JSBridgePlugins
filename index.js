@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const { start } = require("./server/app");
+const { start } = require("./server/dist/app.js");
 
 const pluginName = "JSBridgePlugin";
 let server = null;
