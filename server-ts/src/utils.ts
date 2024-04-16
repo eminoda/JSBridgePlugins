@@ -1,14 +1,16 @@
+import http from "http";
 import url from "url";
-import portfinder from "portfinder";
 import { ip } from "address";
-import { gateway4sync } from "default-gateway";
+import portfinder from "portfinder";
+import * as defaultGateway from "default-gateway";
 import chalk from "chalk";
+import { Server } from "socket.io";
 
 export const getAvaiableServerAddress = async (port: number = 3300) => {
   portfinder.setBasePort(port);
   const _port = await portfinder.getPortPromise();
-  // { gateway: '192.168.15.1', interface: 'WLAN' }
-  const gatewayResult = gateway4sync();
+  // // { gateway: '192.168.15.1', interface: 'WLAN' }
+  const gatewayResult = defaultGateway.gateway4sync();
   const avaiableAddress = url.format({
     protocol: "http",
     hostname: ip(gatewayResult.int),
@@ -18,12 +20,24 @@ export const getAvaiableServerAddress = async (port: number = 3300) => {
   return { url: avaiableAddress, port: _port };
 };
 
+export const createJSBridgeSocketServer = async (server: http.Server) => {
+  const io = new Server(server, {
+    cors: {
+      origin: ["http://localhost:5173"],
+    },
+  });
+  io.disconnectSockets();
+
+  io.on("connection", async (socket) => {});
+  return io;
+};
+
 export const logger = {
   warning(msg) {
     console.log(chalk.yellow(msg));
   },
-  info(msg) {
-    console.log(chalk.blue(msg));
+  info(...msg) {
+    console.log(chalk.blue(...msg));
   },
   debug(msg, origin) {
     if (origin === "mock-client") {
