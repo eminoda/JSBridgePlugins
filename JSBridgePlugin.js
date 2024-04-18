@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const InjectPlugin = require("webpack-inject-plugin");
+const InjectPlugin = require("webpack-inject-plugin").default;
 const { start } = require("./server-app/dist/index.js");
 const WebpackDevServer = require("webpack-dev-server");
 
@@ -12,7 +12,6 @@ class JSBridgePlugin {
     this.options = options;
   }
   apply(compiler) {
-    console.log(compiler.devServer);
     new InjectPlugin(function () {
       return `require('./dist-mock/jsbridge-mock.umd.js')`;
     }).apply(compiler);

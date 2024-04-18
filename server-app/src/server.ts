@@ -20,7 +20,7 @@ export const getAvaiableServerAddress = async (port: number = 3300) => {
   return { url: avaiableAddress, port: _port };
 };
 
-export const createJSBridgeSocketServer = async (server: http.Server) => {
+export const createJSBridgeSocketServer = async (server: http.Server, origin: string[]) => {
   const socketQueue = [];
   const callbackFnQueue = [];
 
@@ -35,7 +35,7 @@ export const createJSBridgeSocketServer = async (server: http.Server) => {
 
   const io = new Server(server, {
     cors: {
-      origin: ["http://192.168.13.115:5173", "http://127.0.0.1:3300", "http://192.168.13.115:8080", "http://127.0.0.1:8080"],
+      origin,
     },
   });
   io.disconnectSockets();

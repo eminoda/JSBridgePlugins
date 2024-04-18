@@ -16,7 +16,7 @@ export const start = async function (options: JSBridgeServerOptionsType = {}) {
   const { url, port } = await getAvaiableServerAddress(options.port);
 
   const server = app.listen(port, async () => {
-    const jsBridgeSocket = createJSBridgeSocketServer(server);
+    const jsBridgeSocket = createJSBridgeSocketServer(server, options.origin);
     logger.info("JSBridge Server running at:", url);
   });
 };

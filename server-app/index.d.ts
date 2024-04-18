@@ -4,4 +4,5 @@ declare module "nonce-str/index" {
 
 type JSBridgeServerOptionsType = {
   port?: number;
+  origin?: string[];
 };
