@@ -1,8 +1,8 @@
 {
-  "name": "jsbridge-plugins",
-  "version": "1.0.1",
+  "name": "webpack-jsbridge-plugins",
+  "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "JSBridgePlugin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
