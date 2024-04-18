@@ -15,7 +15,8 @@
     "JSBridgePlugin.js",
     "package.json",
     "server-app/dist",
-    "server-app/public"
+    "server-app/public",
+    "*.jpg"
   ],
   "author": "eminoda",
   "license": "MIT",
