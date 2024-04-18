@@ -1,4 +1,4 @@
-const { start } = require("./server/dist/app");
+const { start } = require("./dist/index.js");
 
 let server = null;
 server && server.close();

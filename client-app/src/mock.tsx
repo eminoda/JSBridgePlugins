@@ -75,7 +75,7 @@ window.$jsBridge = {
             resolve(respData);
           },
         });
-        socket.emit("mock-send", { seqId, socketId: jsBridgeSocketId, data });
+        socket.emit("mock-send", { seqId, jsBridgeSocketId: jsBridgeSocketId, data });
       });
     } catch (error: any) {
       console.log(error);

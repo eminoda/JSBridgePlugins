@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
-
-const { start } = require("./server/dist/app.js");
+const InjectPlugin = require("webpack-inject-plugin");
+const { start } = require("./server-app/dist/index.js");
+const WebpackDevServer = require("webpack-dev-server");
 
 const pluginName = "JSBridgePlugin";
 let server = null;
@@ -11,6 +12,11 @@ class JSBridgePlugin {
     this.options = options;
   }
   apply(compiler) {
+    console.log(compiler.devServer);
+    new InjectPlugin(function () {
+      return `require('./dist-mock/jsbridge-mock.umd.js')`;
+    }).apply(compiler);
+
     // start JSBridge Server after compiler done
     compiler.hooks.done.tapAsync(pluginName, async (stats, callback) => {
       try {

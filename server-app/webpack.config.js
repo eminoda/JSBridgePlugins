@@ -1,15 +1,17 @@
 const path = require("path");
+const { library } = require("webpack");
 const nodeExternals = require("webpack-node-externals");
 
 module.exports = {
   target: "node",
   mode: "production",
   entry: {
-    index: "./src/index.ts",
+    index: "./src/app.ts",
   }, // 入口文件路径
   output: {
     path: path.resolve(__dirname, "dist"), // 输出目录
     filename: "[name].js", // 输出文件名
+    libraryTarget: "commonjs",
   },
   resolve: {
     extensions: [".ts", ".tsx", ".mts", ".js"],

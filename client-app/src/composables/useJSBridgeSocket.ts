@@ -15,7 +15,7 @@ export default function useJSBridgeSocket({ receiveData }: { receiveData: (data:
   const [socketStatusTip, setSocketStatusTip] = useState("");
 
   useEffect(() => {
-    socket.current = io("http://192.168.13.115:3300", {
+    socket.current = io({
       query: {
         type: "jsbridge-client",
       },

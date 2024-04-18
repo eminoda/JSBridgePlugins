@@ -2,8 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "esModuleInterop": true,
-    "outDir": "dist-tsc"
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
   "files": ["./index.d.ts"]

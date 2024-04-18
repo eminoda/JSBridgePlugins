@@ -1,9 +1,9 @@
 {
-  "name": "server-ts",
+  "name": "server-app",
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "node ./dist/index.js",
+    "start": "supervisor node ./main.js",
     "build": "webpack --config webpack.config.js -w",
     "build:tsc": "tsc"
   },
@@ -20,6 +20,7 @@
     "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
+    "@ant-design/colors": "^7.0.2",
     "address": "^2.0.2",
     "chalk": "^5.3.0",
     "core-js": "^3.36.1",

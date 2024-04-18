@@ -1,12 +1,13 @@
 const path = require("path");
 const express = require("express");
 
-import { logger, getAvaiableServerAddress, createJSBridgeSocketServer } from "./utils";
+import { getAvaiableServerAddress, createJSBridgeSocketServer } from "./server";
+import { logger } from "./utils";
 
 const app = express();
 
 app.use(
-  express.static(path.join(__dirname, "public"), {
+  express.static(path.join(__dirname, "../public"), {
     extensions: ["html", "js", "css"],
   })
 );
