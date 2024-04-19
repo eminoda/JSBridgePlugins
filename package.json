@@ -1,14 +1,20 @@
 {
-  "name": "webpack-jsbridge-plugins",
+  "name": "webpack-jsbridge-plugin",
   "version": "1.0.0",
   "description": "",
   "main": "JSBridgePlugin.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eminoda/JSBridgePlugins.git"
+  },
+  "homepage": "https://github.com/eminoda/JSBridgePlugins.git#readme",
   "keywords": [
     "jsbridge",
-    "plugins"
+    "webpack",
+    "plugin"
   ],
   "files": [
     "dist-mock",
@@ -16,7 +22,7 @@
     "package.json",
     "server-app/dist",
     "server-app/public",
-    "*.jpg"
+    "arch.jpg"
   ],
   "author": "eminoda",
   "license": "MIT",
