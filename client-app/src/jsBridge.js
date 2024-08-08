@@ -55,18 +55,20 @@ class JsBridge {
     }
   }
   invoke(data = {}) {
-    const { callbackId = Date.now(), action, module, params, callback } = data;
+    if (!data.callbackId) {
+      data.callbackId = Date.now();
+    }
+    const { callbackId, action, module, params, callback } = data;
     return new Promise((resolve, reject) => {
       if (callback) {
+        const id = callbackId || Date.now();
         this._events.push({
           callbackId,
           callbackFn: (_data) => {
             if (_data.code === 0) {
               resolve(_data);
             } else {
-              const error = new Error(_data.msg || "sdk 处理异常");
-              error.code = _data.code;
-              reject(error);
+              resolve({ msg: _data.msg || "sdk 处理异常", code: _data.code });
             }
           },
         });
@@ -89,7 +91,7 @@ class JsBridge {
     const { callbackId, ..._data } = JSON.parse(data);
     for (let i = 0; i < this._events.length; i += 1) {
       const event = this._events[i];
-      if (event.callbackId === callbackId) {
+      if (String(event.callbackId) === callbackId) {
         event.callbackFn(_data);
         if (event.type !== "register") {
           this._events.splice(i, 1);
