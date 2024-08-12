@@ -75,18 +75,22 @@ class JsBridge {
         this._nativeFun(data);
       } else {
         const _data = this._nativeFunSync(data);
+        // alert("_nativeFunSync:" + data);
         if (_data.code === 0) {
           resolve(_data);
         } else {
-          const error = new Error(_data.msg || "sdk 处理异常");
-          error.code = _data.code;
-          reject(error);
+          // const error = new Error(_data.msg || "sdk 处理异常");
+          // error.code = _data.code;
+          _data.msg || "sdk 处理异常"
+          // reject(error);
+          resolve(_data);
         }
       }
     });
   }
 
   receiveMessage(data) {
+    // alert("receiveMessage:" + data);
     console.log("app 回传数据", data);
     const { callbackId, ..._data } = JSON.parse(data);
     for (let i = 0; i < this._events.length; i += 1) {
