@@ -33,7 +33,7 @@ const checkJsBridgeConnectStatus = () => {
   });
 };
 
-const socket: Socket = io(import.meta.env.VITE_JSBRIDGE_SERVER, {
+const socket: Socket = io(location.origin, {
   query: {
     type: "mock-client",
   },
