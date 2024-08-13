@@ -75,7 +75,6 @@ class JsBridge {
         this._nativeFun(data);
       } else {
         const _data = this._nativeFunSync(data);
-        // alert("_nativeFunSync:" + data);
         if (_data.code === 0) {
           resolve(_data);
         } else {
@@ -95,7 +94,7 @@ class JsBridge {
     const { callbackId, ..._data } = JSON.parse(data);
     for (let i = 0; i < this._events.length; i += 1) {
       const event = this._events[i];
-      if (String(event.callbackId) === callbackId) {
+      if (String(event.callbackId) === String(callbackId)) {
         event.callbackFn(_data);
         if (event.type !== "register") {
           this._events.splice(i, 1);
