@@ -2,7 +2,7 @@ import { ErrorBlock, Space, Result } from "antd-mobile";
 import { FaceRecognitionOutline } from "antd-mobile-icons";
 import useJSBridgeSocket from "./composables/useJSBridgeSocket";
 import EventRecord from "./components/EventRecord";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 function App() {
   const [recordList, setRecordList] = useState<{ title: string; seqId: string; content: string; type: string }[]>([]);
 
@@ -26,6 +26,10 @@ function App() {
       invokeNative({ seqId, data });
     },
   });
+
+  useEffect(() => {
+    recordList.length = 0;
+  }, [socketStatus]);
 
   const invokeNative = async ({ seqId, data }: ServerMessage) => {
     // TODO: 调用 native 方法
