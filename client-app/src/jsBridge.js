@@ -5,35 +5,43 @@ class JsBridge {
       this._env = "ios";
     } else if (window.androidJS && window.androidJS.nativeMethod) {
       this._env = "android";
+    } else if (/harmony/i.test(window.navigator.userAgent)) {
+      this._env = "harmony";
     } else {
       this._env = "web";
     }
   }
 
   // 同步
-  _nativeFunSync(data) {
+  async _nativeFunSync(data) {
     console.log("同步方法", data);
     if (this._env === "android") {
       return JSON.parse(window.androidJS.nativeMethod(JSON.stringify(data)));
     } else if (this._env === "ios") {
       return JSON.parse(window.prompt(JSON.stringify(data)));
+    } else if (this._env === "harmony") {
+      console.log("service---", window[service], data)
+      return window[service][data.action](JSON.stringify(data))
     } else {
       return { code: -1, msg: "请在 native 环境运行" };
     }
   }
 
   // 异步
-  _nativeFun(data) {
+  async _nativeFun(data) {
     console.log("异步方法", data);
     if (this._env === "android") {
       return window.androidJS.nativeMethod(JSON.stringify(data));
     } else if (this._env === "ios") {
       return window.webkit.messageHandlers.nativeObject.postMessage(data);
+    } else if (this._env === "harmony") {
+      console.log("service---", window[service], data)
+      return window[service][data.action](JSON.stringify(data))
     } else {
       return { code: -1, msg: "请在 native 环境运行" };
     }
   }
-  register(data, fn) {
+  async register(data, fn) {
     data.callbackId = data.callbackId || Date.now();
 
     this._events.push({
@@ -42,7 +50,7 @@ class JsBridge {
       callbackFn: fn,
     });
 
-    this._nativeFun(data);
+    await this._nativeFun(data);
     return data.callbackId;
   }
   unregister(callbackId) {
@@ -59,7 +67,7 @@ class JsBridge {
       data.callbackId = Date.now();
     }
     const { callbackId, action, module, params, callback } = data;
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (callback) {
         const id = callbackId || Date.now();
         this._events.push({
@@ -74,13 +82,13 @@ class JsBridge {
         });
         this._nativeFun(data);
       } else {
-        const _data = this._nativeFunSync(data);
+        const _data =await this._nativeFunSync(data);
         if (_data.code === 0) {
           resolve(_data);
         } else {
           // const error = new Error(_data.msg || "sdk 处理异常");
           // error.code = _data.code;
-          _data.msg || "sdk 处理异常"
+          _data.msg || "sdk 处理异常";
           // reject(error);
           resolve(_data);
         }
